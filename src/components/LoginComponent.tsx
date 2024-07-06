@@ -2,34 +2,45 @@ import Button from "./InteractiveButton";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMutation } from "@tanstack/react-query";
+import { loginOrSignUp } from "../helpers/login";
+import { toast } from "sonner";
+import { cn } from "../lib/utils";
+import { userSchema } from "../lib/validation";
+import { MyError } from "../lib/MyError";
+import { useNavigate } from "react-router-dom";
+import { useLogin } from "../context/loginContext";
 
 const LoginComponent = () => {
   //To check whether the user signing in or logging in
   const [isLogin, setIsLogin] = useState(true);
+  const url = isLogin ? "login" : "signup";
+  const { setIsLoggedIn, redirectURL, setUser } = useLogin();
+  const navigate = useNavigate();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async ({ formData, url }) => {
-      const response = await fetch(`http://localhost:5000/user/${url}`, {
-        body: JSON.stringify(formData),
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const data = await response.json();
-
-      return data;
+    mutationFn: loginOrSignUp,
+    onSuccess: (data) => {
+      toast("You are now successfully logged in!");
+      setIsLoggedIn(true);
+      setUser(data.user);
+      navigate(redirectURL ? redirectURL : "/");
+    },
+    onError: (error: MyError) => {
+      toast(error.message);
+      if (error.status === 302) {
+        setIsLogin(false);
+      }
     },
   });
 
   const login = (formData: FormData) => {
-    //!Implement validation
-    data = Object.fromEntries(formData);
-  };
-
-  const signup = (formData: FormData) => {
-    data = Object.fromEntries(formData);
+    const data = Object.fromEntries(formData);
+    const result = userSchema.safeParse(data);
+    if (!result.success) {
+      toast(result.error.issues[0].message);
+      return;
+    }
+    mutate({ formData: data, url });
   };
 
   return (
@@ -43,7 +54,7 @@ const LoginComponent = () => {
         onSubmit={(e) => {
           e.preventDefault();
           const formData = new FormData(e.target as HTMLFormElement);
-          isLogin ? login(formData) : signup(formData);
+          login(formData);
         }}
       >
         <motion.h3 className="text-4xl text-white font-bold" layout>
@@ -60,6 +71,7 @@ const LoginComponent = () => {
                 name="fullname"
                 className="w-[90%] h-[40px] rounded-lg bg-dark-3 text-stone-400 p-4 py-6 focus:border-x-4 border-pink-1 outline-none transition-all duration-300 text-lg"
                 placeholder="Full Name"
+                key={"fullname"}
               />
               <motion.input
                 initial={{ opacity: 0 }}
@@ -69,6 +81,7 @@ const LoginComponent = () => {
                 name="email"
                 className="w-[90%] h-[40px] rounded-lg bg-dark-3 text-stone-400 p-4 py-6 focus:border-x-4 border-pink-1 outline-none transition-all duration-300 text-lg"
                 placeholder="E-mail"
+                key={"email"}
               />
             </AnimatePresence>
           </>
@@ -90,7 +103,13 @@ const LoginComponent = () => {
           className="w-[90%] h-[40px] rounded-lg bg-dark-3 text-stone-400 p-4 py-6 focus:border-x-4 border-pink-1 outline-none transition-[border]  duration-300 text-lg"
         />
         <Button
-          className="bg-pink-1 px-16 py-4 rounded-lg text-xl font-semibold"
+          className={cn(
+            "bg-pink-1 px-16 py-4 rounded-lg text-xl font-semibold max-h-[60px]",
+            {
+              "animate-pulse": isPending,
+              "duration-700": true,
+            }
+          )}
           type="submit"
         >
           {isLogin ? "Login" : "Sign Up"}

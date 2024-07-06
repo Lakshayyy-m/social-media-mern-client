@@ -1,6 +1,5 @@
 import { Outlet } from "react-router-dom";
 import MainNavigation from "./MainNavigation";
-import { Toaster } from "sonner";
 
 
 const RootNavigation = () => {
@@ -10,7 +9,7 @@ const RootNavigation = () => {
       <main>
         <Outlet />
       </main>
-      <Toaster />
+
     </>
   );
 };
