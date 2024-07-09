@@ -6,6 +6,7 @@ export type formDataType = {
 };
 
 export type UserType = {
+  _id: string;
   name: string;
   username: string;
   email: string;
@@ -13,4 +14,21 @@ export type UserType = {
   following: string[];
   bio: string;
   profileImg: string;
+};
+
+export type CommentType = {
+  commentId: string;
+  userId: string;
+  body: string;
+  likesCount: string[];
+};
+
+export type PostType = {
+  _id: string;
+  userId: string;
+  imgUrl: string[];
+  comments: CommentType[];
+  description: string;
+  createdAt: string;
+  likes: string[];
 };

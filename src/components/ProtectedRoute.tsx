@@ -1,6 +1,6 @@
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { useLogin } from "../context/loginContext";
-import { toast } from "sonner";
+// import { toast } from "sonner";
 import { useEffect } from "react";
 
 const ProtectedRoute = () => {
@@ -10,7 +10,7 @@ const ProtectedRoute = () => {
   useEffect(() => {
     if (!isLoggedIn) {
       setRedirectURL(URL.pathname);
-      toast("You have to login first!");
+      // toast("You have to login first!");
       navigate("/login");
     }
   }, [URL.pathname, isLoggedIn, navigate, setRedirectURL]);

@@ -1,8 +1,7 @@
-
 import { CircleLoader } from "react-spinners";
 
 const Loading = () => {
-  return <CircleLoader />;
+  return <CircleLoader color="#fff" />;
 };
 
 export default Loading;
