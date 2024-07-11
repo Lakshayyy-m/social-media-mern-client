@@ -25,7 +25,7 @@ function App() {
                   element: <PostPage />,
                 },
                 {
-                  path: "user/:id",
+                  path: "/user/:id",
                   element: <ProfilePage />,
                 },
               ],
@@ -48,7 +48,5 @@ function App() {
 
   return <RouterProvider router={router} />;
 }
-
-//Todo Implementing protected routes
 
 export default App;

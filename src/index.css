@@ -76,6 +76,9 @@
     @apply bg-background text-foreground;
   }
 }
+.searchIconFilter {
+  @apply invert-[65%] sepia-[5%] saturate-[287%] hue-rotate-[341deg] brightness-[100%] contrast-[88%];
+}
 
 .mainFont {
   font-family: "Playwrite MX", cursive;
@@ -84,12 +87,17 @@
   font-style: normal;
 }
 
-.normalFont{
+.normalFont {
   font-family: "Poppins", sans-serif;
-  
 }
 
-body{
+body {
   background-color: #131313;
   font-family: "Poppins", sans-serif;
+}
+
+.searchBarShadow {
+  -webkit-box-shadow: 0px 1px 2px 0px rgba(107, 107, 107, 1);
+  -moz-box-shadow: 0px 1px 2px 0px rgba(107, 107, 107, 1);
+  box-shadow: 0px 1px 2px 0px rgba(107, 107, 107, 1);
 }

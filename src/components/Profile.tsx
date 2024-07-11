@@ -10,8 +10,19 @@ import { useState } from "react";
 import { cn } from "../lib/utils";
 import ProfileListCard from "./ProfileListCard";
 import PostsSection from "./PostsSection";
+import Button from "./InteractiveButton";
+import { UseMutateFunction } from "@tanstack/react-query";
 
-const Profile = ({ user }: { user: UserType }) => {
+const Profile = ({
+  user,
+  self,
+  logout,
+}: {
+  user: UserType;
+  self: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  logout: UseMutateFunction<any, Error, void, unknown>;
+}) => {
   const [isFollowersActive, setIsFollowersIsActive] = useState(true);
 
   return (
@@ -22,13 +33,19 @@ const Profile = ({ user }: { user: UserType }) => {
             src={user?.profileImg === "" ? profilePic : user?.profileImg}
             alt={user.name}
             className="w-[120px] max-lg:m-auto"
-
           />
           <div className="flex flex-col gap-2">
             <h5 className="text-white italic">@{user.username}</h5>
-            <h2 className="text-4xl max-md:text-2xl font-semibold text-white">
-              {user.name}
-            </h2>
+            <div>
+              <h2 className="text-4xl max-md:text-2xl font-semibold text-white">
+                {user.name}
+              </h2>
+              {self && (
+                <Button className="text-white" onClick={() => logout()}>
+                  Logout
+                </Button>
+              )}
+            </div>
             <h3 className="text-white italic">
               {user.bio.length === 0 ? "No bio added" : user.bio}
             </h3>
